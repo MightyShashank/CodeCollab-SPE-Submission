@@ -1,0 +1,14 @@
+# filename: url-parser-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: url-parser-internal
+  annotations:
+    cloud.google.com/backend-config: '{"default": "url-parser-backendconfig"}'
+spec:
+  type: ClusterIP
+  selector:
+    app: url-parser-server
+  ports:
+  - port: 80
+    targetPort: 5000

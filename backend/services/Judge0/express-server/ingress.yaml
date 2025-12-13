@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: express-server-ingress
+  namespace: server
+  annotations:
+    nginx.ingress.kubernetes.io/limit-rps: "5"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "2"
+    nginx.ingress.kubernetes.io/limit-burst: "10"
+    nginx.ingress.kubernetes.io/limit-connections: "20"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: express.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: express-server
+                port:
+                  number: 80
+
+# This defines how external traffic gets routed into your cluster via the ingress controller.
+# kubectl apply -f express-server/ingress.yaml → Configures NGINX ingress to forward express.example.com traffic to your Node.js service.

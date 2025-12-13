@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-init-bucket
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: create-bucket
+          image: minio/mc:latest
+          env:
+            - name: MINIO_ALIAS
+              value: "localminio"
+            - name: MINIO_ENDPOINT
+              value: "http://minio:9000"
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: MINIO_ROOT_USER
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-credentials
+                  key: MINIO_ROOT_PASSWORD
+            - name: TARGET_BUCKET
+              value: "user-submission-testcases-result-bucket"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              attempts=0
+              echo "Waiting for MinIO at ${MINIO_ENDPOINT}..."
+              while [ $attempts -lt 60 ]; do
+                if mc alias set ${MINIO_ALIAS} "${MINIO_ENDPOINT}" "${AWS_ACCESS_KEY_ID}" "${AWS_SECRET_ACCESS_KEY}" --insecure 2>/dev/null; then
+                  echo "mc alias set succeeded"
+                  break
+                fi
+                attempts=$((attempts+1))
+                echo "Attempt ${attempts}/60: MinIO not ready yet, sleeping 2s..."
+                sleep 2
+              done
+              if [ $attempts -ge 60 ]; then
+                echo "Timed out waiting for MinIO to become ready" >&2
+                exit 1
+              fi
+              if mc ls ${MINIO_ALIAS}/${TARGET_BUCKET} --insecure >/dev/null 2>&1; then
+                echo "Bucket ${TARGET_BUCKET} already exists"
+              else
+                echo "Creating bucket ${TARGET_BUCKET} ..."
+                mc mb ${MINIO_ALIAS}/${TARGET_BUCKET} --insecure
+                echo "Bucket ${TARGET_BUCKET} created"
+              fi
+              echo "minio-init-bucket job completed"

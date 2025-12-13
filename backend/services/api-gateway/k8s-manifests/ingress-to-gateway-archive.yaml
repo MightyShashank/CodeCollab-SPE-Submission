@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: expose-custom-gateway
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: mostly-postfemoral-xenia.ngrok-free.dev  # <--- PASTE YOUR DOMAIN HERE
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api-gateway-internal
+            port:
+              number: 80
+
+
+# THis above isnt being used currently as I am using ngrok deployment to expose the gateway
+
+# Above ingress controller is already isntalled in the kind cluster via the command:
+
+# kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+
+# kubectl apply -f ingress-to-gateway.yaml
+
+# To verify the ingress is created successfully, run:
+# kubectl get ingress 
+# kubectl describe ingress expose-custom-gateway
+
+# Run this command to see the actual "Controller" pod. This is the NGINX server instance itself.
+# kubectl get pods -n ingress-nginx
+
+# I had also did this below before exposing the gateway via ingress:
+#  ngrok http --domain=mostly-postfemoral-xenia.ngrok-free.dev 80
+

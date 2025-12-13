@@ -1,0 +1,42 @@
+# filename: auth-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-server
+  labels:
+    app: auth-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-server
+  template:
+    metadata:
+      labels:
+        app: auth-server
+    spec:
+      containers:
+      - name: auth-server
+        image: mightyshashank/codecollab:auth-server-image-v23 # <-- IMPORTANT: Change this
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - configMapRef:
+            name: auth-server-config # <-- Reference to the new ConfigMap
+        - secretRef:
+            name: auth-server-secret
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        # You'll need to add a /healthy endpoint to your auth server's index.js
+        readinessProbe:
+          httpGet:
+            path: /healthy
+            port: 5000
+          initialDelaySeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /healthy
+            port: 5000
+          initialDelaySeconds: 10

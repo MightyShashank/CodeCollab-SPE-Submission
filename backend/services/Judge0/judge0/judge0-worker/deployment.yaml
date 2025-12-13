@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: judge0
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+        - name: worker
+          image: judge0/judge0:latest
+          command: ["./scripts/workers"]
+          securityContext:
+            privileged: true
+          envFrom:
+            - secretRef:
+                name: judge0-env
+          volumeMounts:
+            - name: box-volume
+              mountPath: /box
+      volumes:
+        - name: box-volume
+          emptyDir: {}

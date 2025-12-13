@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-server
+  namespace: server
+  labels:
+    app: express-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: express-server
+  template:
+    metadata:
+      labels:
+        app: express-server
+    spec:
+      containers:
+        - name: express-server
+          image: your-dockerhub-user/express-server:latest # Change to your image
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: JUDGE0_API_URL
+              value: "http://judge0-api-server.judge0.svc.cluster.local:2358"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

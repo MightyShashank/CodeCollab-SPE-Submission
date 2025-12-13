@@ -1,0 +1,17 @@
+# filename: api-gateway-backend-config.yaml
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: api-gateway-backendconfig
+spec:
+  # --- NEW: Increased timeout ---
+  # Set the timeout to 120 seconds (2 minutes)
+  timeoutSec: 300
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 15
+    healthyThreshold: 1
+    unhealthyThreshold: 2
+    type: HTTP
+    requestPath: /healthy
+    port: 8080

@@ -1,0 +1,46 @@
+# filename: url-parser-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: url-parser-server
+  labels:
+    app: url-parser-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: url-parser-server
+  template:
+    metadata:
+      labels:
+        app: url-parser-server
+    spec:
+      containers:
+      - name: url-parser-server
+        image: mightyshashank/codecollab:url-parser-server-image-v14
+        ports:
+        - containerPort: 5000
+        env:
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: url-parser-secret
+              key: GEMINI_API_KEY
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "250m"
+            memory: "512Mi"
+        readinessProbe:
+          # Puppeteer can take a while to start, so we give it a longer initial delay
+          initialDelaySeconds: 30
+          httpGet:
+            path: /healthy # You will need to add a /healthy endpoint to your parser-server.js
+            port: 5000
+        livenessProbe:
+          initialDelaySeconds: 30
+          httpGet:
+            path: /healthy
+            port: 5000

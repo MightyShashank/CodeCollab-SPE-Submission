@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codecollab-callback-url
+  namespace: default
+  labels:
+    app: codecollab-callback-url
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: codecollab-callback-url
+  template:
+    metadata:
+      labels:
+        app: codecollab-callback-url
+    spec:
+      containers:
+        - name: codecollab-callback-url
+          # Ubuntu + SSH + our minimal HTTP server (3000)
+          image: rastasheep/ubuntu-sshd:18.04
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+            - name: ssh
+              containerPort: 22
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              # Start minimal HTTP server on :3000
+              if command -v python3 >/dev/null 2>&1; then
+                nohup python3 -m http.server 3000 --bind 0.0.0.0 >/dev/null 2>&1 &
+              else
+                nohup python -m SimpleHTTPServer 3000 >/dev/null 2>&1 &
+              fi
+              # Keep container alive (sshd already running in base image)
+              tail -f /dev/null
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"

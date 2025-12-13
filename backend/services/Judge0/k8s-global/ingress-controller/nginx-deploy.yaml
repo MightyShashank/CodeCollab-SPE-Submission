@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-nginx-controller-judge0
+  namespace: ingress-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ingress-nginx
+    spec:
+      serviceAccountName: ingress-nginx
+      containers:
+        - name: controller
+          image: registry.k8s.io/ingress-nginx/controller:v1.11.1
+          args:
+            - /nginx-ingress-controller
+            - --configmap=$(POD_NAMESPACE)/nginx-configuration
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+
+# kubectl apply -f ingress-nginx/nginx-deploy.yaml → Brings up the actual ingress controller that will read ingress rules and forward traffic.
+
+# above deploys the nginx ingress controller

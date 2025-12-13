@@ -1,0 +1,37 @@
+# Environment files
+.env
+*.env
+
+# Secrets and configs
+secrets.yaml
+secret.yaml
+configmap*
+configmap.yaml
+ingress-certificate.yaml
+
+url-parser-secret.yaml
+
+problem-ai-service-deployment-secrets.yaml
+problem-ai-service-configmap.yaml
+
+boilerplate-secret.yaml
+
+auth-configmap.yaml
+auth-secret.yaml
+
+api-gateway-configmap.yaml
+
+
+nginx-configmap.yaml
+express-env.yaml
+judge0-env.yaml
+
+# Dependency folders
+node_modules/
+
+# build
+/dist
+
+# vendor specific deployment
+.firebase/
+

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: judge0
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: server
+          image: mightyshashank/codecollab:judge0-latest 
+          command:
+          - bundle
+          - exec
+          - rails
+          - server
+          - -b
+          - 0.0.0.0
+          - -p
+          - "2358"
+          ports:
+            - containerPort: 2358
+          securityContext:
+            privileged: true
+          envFrom:
+            - secretRef:
+                name: judge0-env
+          volumeMounts:            # <-- moved here, inside the container
+            - mountPath: /box
+              name: box-volume
+      volumes:                  # <-- stays at pod spec level
+        - name: box-volume
+          emptyDir: {}

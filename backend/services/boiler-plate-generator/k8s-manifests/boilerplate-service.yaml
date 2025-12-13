@@ -1,0 +1,12 @@
+# filename: boilerplate-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: boilerplate-server-internal
+spec:
+  type: ClusterIP
+  selector:
+    app: boilerplate-server
+  ports:
+  - port: 80
+    targetPort: 4000

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  namespace: judge0
+spec:
+  replicas: 2   # Temporary scaling for dev; Cloud SQL will handle prod scaling
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16.2
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: judge0-env # loads all secrets into environment variables

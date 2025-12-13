@@ -1,0 +1,48 @@
+# filename: boilerplate-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boilerplate-server
+  labels:
+    app: boilerplate-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boilerplate-server
+  template:
+    metadata:
+      labels:
+        app: boilerplate-server
+    spec:
+      containers:
+      - name: boilerplate-server
+        image: mightyshashank/codecollab:boilerplate-server-v4
+        ports:
+        - containerPort: 4000
+        env:
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              # This name must match the 'name' in your secret.yaml
+              name: gemini-api-key-secret
+              # This key must match the key under 'data' in your secret.yaml
+              key: API_KEY
+              
+        # --- NEW: Added resource requests and limits ---
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+
+        readinessProbe:
+          httpGet:
+            path: /healthy
+            port: 4000
+        livenessProbe:
+          httpGet:
+            path: /healthy
+            port: 4000

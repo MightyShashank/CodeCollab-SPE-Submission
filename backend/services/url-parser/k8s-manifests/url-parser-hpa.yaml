@@ -1,0 +1,19 @@
+# filename: url-parser-hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: url-parser-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: url-parser-server
+  minReplicas: 1
+  maxReplicas: 1 # Keep this low as Puppeteer is resource-intensive
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80

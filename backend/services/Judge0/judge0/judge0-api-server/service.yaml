@@ -1,0 +1,20 @@
+# below is a clusterIP so only accessible in the k8s cluster
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: server
+  namespace: judge0
+spec:
+  type: ClusterIP   # Later change to ClusterIP before adding server maybe
+  selector:
+    app: server
+  ports:
+    - port: 2358
+      targetPort: 2358
+
+
+# any pod inside the judge0 namespace can hit the judge0 API as:
+# http://server.judge0.svc.cluster.local:2358
+# service.namespace.svc.cluster.local:2358
+

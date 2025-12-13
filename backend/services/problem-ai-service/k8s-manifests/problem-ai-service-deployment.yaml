@@ -1,0 +1,44 @@
+# filename: problem-ai-service-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: problem-ai-service
+  labels:
+    app: problem-ai-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: problem-ai-service
+  template:
+    metadata:
+      labels:
+        app: problem-ai-service
+    spec:
+      containers:
+      - name: problem-ai-service
+        image: mightyshashank/codecollab:problem-ai-service-image-v5 # <-- IMPORTANT: Change this
+        ports:
+        - containerPort: 6000
+        envFrom:
+        - configMapRef:
+            name: problem-ai-service-config
+        - secretRef:
+            name: problem-ai-service-secret
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        readinessProbe:
+          httpGet:
+            path: /healthy
+            port: 6000
+          initialDelaySeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /healthy
+            port: 6000
+          initialDelaySeconds: 15

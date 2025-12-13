@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: express-server-ratelimit
+  namespace: server
+data:
+  # Number of requests per second allowed per client IP
+  limit-req-zone: "$binary_remote_addr zone=api_limit:10m rate=5r/s"
+  # Optional: burst size before requests are delayed/dropped
+  limit-req: "zone=api_limit burst=10 nodelay"

@@ -1,0 +1,77 @@
+# # fullnameOverride: redis  # Forces all resources to be called "redis"
+# architecture: replication  # replication mode (1 master + N replicas)
+
+# auth:
+#   enabled: true
+#   existingSecret: judge0-env
+#   existingSecretPasswordKey: REDIS_PASSWORD  # This must match the key in judge0-env
+
+# master:
+#   persistence:
+#     enabled: true
+#     size: 1Gi
+#   resources:
+#     requests:
+#       cpu: 250m
+#       memory: 256Mi
+
+# replica:
+#   replicaCount: 2
+#   persistence:
+#     enabled: true
+#     size: 1Gi
+#   resources:
+#     requests:
+#       cpu: 250m
+#       memory: 256Mi
+
+# metrics:
+#   enabled: true
+
+# service:
+#   type: ClusterIP
+
+
+# The redis master service will now be called as:
+# redis-master.judge0.svc.cluster.local:6379
+
+
+# Replicas will be:
+# redis-replicas.judge0.svc.cluster.local:6379
+
+
+# This below is 2nd attempt
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: judge0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.2.4
+          command:
+            - "bash"
+            - "-c"
+            - 'docker-entrypoint.sh --appendonly no --requirepass "$$REDIS_PASSWORD"'
+          envFrom:
+            - secretRef:
+                name: judge0-env
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

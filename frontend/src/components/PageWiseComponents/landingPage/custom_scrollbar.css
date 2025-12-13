@@ -1,0 +1,20 @@
+/* custom-scrollbar.css */
+.custom-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #6b7280 #3f3f46; /* thumb color, track color */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #3f3f46; /* zinc-800 */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #6b7280; /* gray-500 */
+  border-radius: 8px;
+}
+
+

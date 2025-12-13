@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: judge0
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: server
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-nginx
+
+# Above we are defining different namespaces for different usecases.
+# Namesapces hekp group logically related resources and isolate environments and make it easier to apply resource quotas, network policies.
+
+# If we follow this:
+
+# 1.judge0 namespace → Postgres, Redis, API, Worker
+  # These talk internally (ClusterIP services).
+  # They’re invisible to the public internet.
+
+# 2. server namespace → Your Express app + rate limiting config
+  # This is the only thing exposed via NGINX Ingress → LoadBalancer.
+
+# 3. ingress-nginx namespace → NGINX ingress controller resources
+  # Keeps all LB-related stuff isolated from your application pods.
+  

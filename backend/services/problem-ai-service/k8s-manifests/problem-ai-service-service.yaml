@@ -1,0 +1,14 @@
+# filename: problem-ai-service-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: problem-ai-service-internal
+  annotations:
+    cloud.google.com/backend-config: '{"default": "problem-ai-service-backendconfig"}'
+spec:
+  type: ClusterIP
+  selector:
+    app: problem-ai-service
+  ports:
+  - port: 80
+    targetPort: 6000

@@ -1,0 +1,12 @@
+# Ignore local environment file
+.env
+
+# Ignore dependencies, as they are installed inside the container
+node_modules
+
+# Ignore npm debug logs
+npm-debug.log
+
+# Ignore Docker files themselves
+Dockerfile
+.dockerignore

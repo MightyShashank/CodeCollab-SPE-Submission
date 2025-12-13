@@ -1,0 +1,30 @@
+# filename: auth-cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: unverified-user-cleanup-job
+spec:
+  # This schedule means "at the top of every hour"
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cleanup-container
+            image: mightyshashank/codecollab:auth-server-image-v14 # <-- Use the same image as your auth server
+            # This overrides the default CMD from the Dockerfile
+            command: ["node", "jobs/cleanup.js"]
+            envFrom:
+              # The cleanup job needs the same secrets as your auth server to connect to the DB
+              - secretRef:
+                  name: auth-server-secret
+            # --- NEW: Added resource requests and limits ---
+            resources:
+              requests:
+                cpu: "100m"      # Request 0.1 of a CPU core
+                memory: "128Mi"  # Request 128 Megabytes of memory
+              limits:
+                cpu: "250m"
+                memory: "256Mi"
+          restartPolicy: OnFailure

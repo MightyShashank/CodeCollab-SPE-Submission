@@ -1,0 +1,28 @@
+# judge0/redis/redis-master-alias.yaml
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: redis-master         # This matches REDIS_HOST
+#   namespace: judge0
+# spec:
+#   type: ClusterIP
+#   ports:
+#     - port: 6379
+#       targetPort: 6379
+#   selector:
+#     app.kubernetes.io/name: redis
+#     app.kubernetes.io/component: master
+
+# THis below is 2nd attempt
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: judge0
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: 6379
+  selector:
+    app: redis

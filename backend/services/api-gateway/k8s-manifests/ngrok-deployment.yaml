@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngrok-tunnel
+  labels:
+    app: ngrok
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ngrok
+  template:
+    metadata:
+      labels:
+        app: ngrok
+    spec:
+      containers:
+      - name: ngrok
+        image: ngrok/ngrok:alpine
+        command: ["ngrok", "http"]
+        args:
+        # Your exact stable domain
+        - "--domain=mostly-postfemoral-xenia.ngrok-free.dev"
+        # Pointing to your internal service (Name:Port)
+        - "api-gateway-internal:80"
+        env:
+        - name: NGROK_AUTHTOKEN
+          valueFrom:
+            secretKeyRef:
+              name: ngrok-secret
+              key: NGROK_AUTHTOKEN
+
+
+# kubectl create secret generic ngrok-secret --from-literal=NGROK_AUTHTOKEN=TOKEN_VALUE_HERE (token comes from dashboard.ngrok.com)
+
+# deploy this above depoyment also
