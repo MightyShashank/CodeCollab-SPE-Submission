@@ -46,3 +46,17 @@ Job logs:
 - To view on console do the port forwarding:
 - kubectl port-forward svc/minio-console 9001:9001
 - user: minioadmin, password: minioadmin
+
+
+
+TO change permissions:
+
+- export PATH=$HOME/minio-binaries:$PATH
+- mc --version
+- kubectl exec -it minio-deployment-77749f8866-fjpfm -- /bin/sh
+
+# 1. Log in (Create the alias)
+- mc alias set localminio http://localhost:9000 minioadmin minioadmin
+
+# 2. Set the bucket to Public Read-Only (Download)
+- mc anonymous set download localminio/user-submission-testcases-result-bucket

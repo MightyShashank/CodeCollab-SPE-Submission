@@ -25,8 +25,8 @@ import { activeModalState } from '../../../recoil/atoms/modalAtoms';
 import toast from 'react-hot-toast';
 
 // The base URL of your deployed API
-// const API_URL = 'https://mostly-postfemoral-xenia.ngrok-free.dev';
-const API_URL = 'https://mostly-postfemoral-xenia.ngrok-free.dev';
+// const API_URL = ' http://localhost:8085';
+const API_URL = ' http://localhost:8085';
 
 export default function SignUP({ isOpen, onOpenChange }) {
 

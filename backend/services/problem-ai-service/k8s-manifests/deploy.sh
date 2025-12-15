@@ -1,6 +1,6 @@
 # build img and push to docker hub
-# docker build -t mightyshashank/codecollab:problem-ai-service-image-v5 .
-# docker push mightyshashank/codecollab:problem-ai-service-image-v5
+# DOCKER_BUILDKIT=0 docker build -t mightyshashank/codecollab:problem-ai-service-image-v10 .
+# docker push mightyshashank/codecollab:problem-ai-service-image-v10
 
 # 1. Apply the Secret and ConfigMap first, as the Deployment depends on them.
 kubectl apply -f problem-ai-service-deployment-secrets.yaml

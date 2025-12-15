@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: mightyshashank/codecollab:api-gateway-image-v42 # <-- IMPORTANT: Change this
+        image: mightyshashank/codecollab:api-gateway-image-v64 # <-- IMPORTANT: Change this
         ports:
         - containerPort: 8080
         env:

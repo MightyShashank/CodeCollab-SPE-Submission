@@ -190,13 +190,14 @@ const CreateProblemPage = () => {
     console.log('Checkpoint 1');
 
     try {
-      const response = await fetch('https://mostly-postfemoral-xenia.ngrok-free.dev/problems', {
+      const response = await fetch(' http://localhost:8085/problems', {
         method: 'POST',
         // Tells the browser to automatically send cookies with the request.
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           // REMOVED: No need to manually set the auth token header.there earlier used to be authToken kinda here
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify(finalPayload),
       });

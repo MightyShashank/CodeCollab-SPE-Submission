@@ -19,3 +19,6 @@ echo "API Gateway deployment complete!"
 # kubectl delete -f api-gateway-service.yaml
 # kubectl delete -f api-gateway-backend-config.yaml
 # kubectl delete -f api-gateway-hpa.yaml
+
+# DOCKER_BUILDKIT=0 docker build -t mightyshashank/codecollab:api-gateway-image-v64 .
+# docker push mightyshashank/codecollab:api-gateway-image-v64

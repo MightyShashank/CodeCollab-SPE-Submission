@@ -241,7 +241,7 @@ export const ResultsPanel = ({ results, finalVerdict, isSubmitting, onClose, cod
         setExplanation(null);
 
         try {
-            const response = await fetch('https://mostly-postfemoral-xenia.ngrok-free.dev/explain', {
+            const response = await fetch(' http://localhost:8085/explain', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -280,7 +280,7 @@ export const ResultsPanel = ({ results, finalVerdict, isSubmitting, onClose, cod
         setDebuggingCaseToken(failedCase?.judge0_response?.token);
 
         try {
-             const response = await fetch('https://mostly-postfemoral-xenia.ngrok-free.dev/debug', {
+             const response = await fetch(' http://localhost:8085/debug', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -580,8 +580,11 @@ export default function CodeEditor({ problemId }) {
             if (!problemId) return;
             setProblemError(null);
             try {
-                const response = await fetch(`https://mostly-postfemoral-xenia.ngrok-free.dev/problems/${problemId}`, {
+                const response = await fetch(` http://localhost:8085/problems/${problemId}`, {
                     credentials: 'include',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch problem data.');
@@ -602,7 +605,12 @@ export default function CodeEditor({ problemId }) {
             setCode('// Loading boilerplate code...');
             try {
                 const langId = selectedLanguage.language_id;
-                const response = await fetch( `https://mostly-postfemoral-xenia.ngrok-free.dev/display_problem/${problemId}?language_id=${langId}`, { credentials: 'include' });
+                const response = await fetch( ` http://localhost:8085/display_problem/${problemId}?language_id=${langId}`, { 
+                    credentials: 'include', 
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.error || 'Failed to fetch boilerplate code.');
@@ -678,9 +686,12 @@ export default function CodeEditor({ problemId }) {
         setHint('');
 
         try {
-            const response = await fetch('https://mostly-postfemoral-xenia.ngrok-free.dev/hint', {
+            const response = await fetch('http://localhost:8085/hint', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                },
                 credentials: 'include',
                 body: JSON.stringify({
                     problem_markdown: problem.description_md, 
@@ -717,7 +728,7 @@ export default function CodeEditor({ problemId }) {
         // 2. Create a new WebSocket connection for this submission
         console.log("Initiating new WebSocket connection for submission...");
         // In the handleSubmit function
-        const ws = new WebSocket('wss://mostly-postfemoral-xenia.ngrok-free.dev');
+        const ws = new WebSocket('ws://localhost:8085');
         wsRef.current = ws;
         console.log("Checkpoint 1");
 
@@ -727,9 +738,12 @@ export default function CodeEditor({ problemId }) {
 
             try {
                 // Once connected, send the HTTP request to start the submission process
-                const response = await fetch('https://mostly-postfemoral-xenia.ngrok-free.dev/submit', {
+                const response = await fetch('http://localhost:8085/submit', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`, 
+                    },
                     credentials: 'include',
                     body: JSON.stringify({
                         problem_id: problemId,

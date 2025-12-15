@@ -1,0 +1,7 @@
+- hosts: local
+  gather_facts: false
+  vars:
+    service_path: backend/services/webhook-callback-endpoint
+    deploy_script: deploy-webhook-callback-endpoint.sh
+  roles:
+    - run-deploy-script

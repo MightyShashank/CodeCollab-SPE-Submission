@@ -1,0 +1,9 @@
+- name: Make deploy script executable
+  shell: chmod +x {{ deploy_script }}
+  args:
+    chdir: "{{ service_path }}"
+
+- name: Run deploy script
+  shell: ./{{ deploy_script }}
+  args:
+    chdir: "{{ service_path }}"

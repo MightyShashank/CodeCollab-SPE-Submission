@@ -1,6 +1,6 @@
 # build img and push to docker hub
-# docker build -t mightyshashank/codecollab:web-hook-server-image-v73 .
-# docker push mightyshashank/codecollab:web-hook-server-image-v73
+# docker build -t mightyshashank/codecollab:web-hook-server-image-v78 .
+# docker push mightyshashank/codecollab:web-hook-server-image-v78
 
 # apply manifests
 kubectl apply -f configmap.yaml
@@ -26,6 +26,6 @@ kubectl apply -f hpa.yaml                # optional
 # kubectl describe managedcertificate gke-managed-cert
 # kubectl describe ingress webhook-server-ingress
 
-# DOCKER_BUILDKIT=0 docker build -t mightyshashank/codecollab:web-hook-server-image-v73 .
+# DOCKER_BUILDKIT=0 docker build -t mightyshashank/codecollab:web-hook-server-image-v78 .
 
 # kubectl exec -it webhook-server-b99998c68-dpx8f -- env | grep REDIS

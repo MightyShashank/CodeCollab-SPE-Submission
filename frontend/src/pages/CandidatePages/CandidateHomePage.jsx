@@ -115,10 +115,13 @@ export default function CandidateHomePage() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('https://mostly-postfemoral-xenia.ngrok-free.dev/api/auth/logout', {
+            const response = await fetch(' http://localhost:8085/api/auth/logout', {
                 method: 'POST',
                 credentials: 'include', // Important for sending the cookie to be cleared
             });
+
+            localStorage.removeItem('token');
+
             if (!response.ok) {
                 throw new Error('Logout failed.');
             }

@@ -1,0 +1,7 @@
+- hosts: local
+  gather_facts: false
+  vars:
+    service_path: backend/services/problem-ai-service
+    deploy_script: deploy-problem-ai-service.sh
+  roles:
+    - run-deploy-script

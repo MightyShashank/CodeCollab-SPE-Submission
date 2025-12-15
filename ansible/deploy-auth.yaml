@@ -1,0 +1,7 @@
+- hosts: local
+  gather_facts: false
+  vars:
+    service_path: backend/services/auth
+    deploy_script: deploy-auth.sh
+  roles:
+    - run-deploy-script

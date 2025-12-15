@@ -16,8 +16,8 @@ import { useRecoilState } from "recoil";
 
 
 // The base URL of your deployed API
-// const API_URL = 'https://mostly-postfemoral-xenia.ngrok-free.dev';
-const API_URL = 'https://mostly-postfemoral-xenia.ngrok-free.dev';
+// const API_URL = ' http://localhost:8085';
+const API_URL = ' http://localhost:8085';
 
 export default function Login({ isOpen, onOpenChange, navigate }) {
 
@@ -49,6 +49,8 @@ export default function Login({ isOpen, onOpenChange, navigate }) {
             });
 
             const data = await response.json();
+
+            localStorage.setItem('token', data.token); // stored token in local storage
 
             if (!response.ok) {
                 throw new Error(data.message || 'Something went wrong during login.');

@@ -47,8 +47,11 @@ const SubmissionDetailPanel = ({ submission, onClose }) => {
             setError(null);
             setOpenTestCaseIndex(null); // Reset open case when submission changes
             try {
-                const response = await fetch(`https://mostly-postfemoral-xenia.ngrok-free.dev/submissions/results/${submission.submission_id}`, {
-                    credentials: 'include'
+                const response = await fetch(` http://localhost:8085/submissions/results/${submission.submission_id}`, {
+                    credentials: 'include',
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
                 });
                 if (!response.ok) {
                     const errorData = await response.json();
@@ -281,7 +284,12 @@ const AllSubmissionsPage = () => {
             }
             setIsLoading(true);
             try {
-                const response = await fetch(`https://mostly-postfemoral-xenia.ngrok-free.dev/submissions/user/${user.user_id}`, { credentials: 'include' });
+                const response = await fetch(` http://localhost:8085/submissions/user/${user.user_id}`, { 
+                  credentials: 'include',
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                  }, 
+                });
                 if (!response.ok) {
                     throw new Error('Failed to fetch submissions.');
                 }
@@ -411,8 +419,11 @@ const ProblemSolverComponent = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch(`https://mostly-postfemoral-xenia.ngrok-free.dev/problems/${problemId}`, {
+                const response = await fetch(` http://localhost:8085/problems/${problemId}`, {
                     credentials: 'include',
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch problem data.');
@@ -463,11 +474,17 @@ const ProblemListComponent = () => {
 
         // Fetch all problems and user submissions in parallel
         const [problemsResponse, submissionsResponse] = await Promise.all([
-          fetch('/problems', {
-            credentials: 'include'
+          fetch('http://localhost:8085/problems', {
+            credentials: 'include', // Automatically sends the auth cookie
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           }),
-          fetch(`https://mostly-postfemoral-xenia.ngrok-free.dev/submissions/user/${userId}`, {
+          fetch(`http://localhost:8085/submissions/user/${userId}`, {
             credentials: 'include',
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           })
         ]);
 

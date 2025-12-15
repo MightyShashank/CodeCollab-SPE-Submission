@@ -19,7 +19,7 @@ const { WebSocketServer, WebSocket } = require('ws');
 const app = express();
 
 app.use(cors({
-    origin:  ['https://localhost:5175', 'https://codecollab.co.in'], // In production, change this to your frontend's domain
+    origin:  ['https://localhost:5175', 'https://codecollab.co.in', 'https://localhost:5175', ' http://localhost:8085'], // In production, change this to your frontend's domain
     credentials: true
 }));
 
@@ -35,6 +35,9 @@ const sessionMiddleware = session({
     saveUninitialized: true,
     cookie: { secure: true } // true (since site is https)
 });
+
+
+
 
 app.use(cookieParser()); // Use cookie parser
 app.use(sessionMiddleware);
@@ -506,10 +509,16 @@ app.post('/submit', async (req, res) => {
         }
 
         const testcasesLink = problemResult.rows[0].testcases_object_link;
+        console.log(`testcasesLink = ${testcasesLink}`);
         if (!testcasesLink) {
             return res.status(500).json({ error: 'Test cases not found for this problem.' });
         }
-
+        
+        const testcasesResponse = await axios.get(testcasesLink);
+            console.log(`testcasesResponse = ${JSON.stringify(testcasesResponse, null, 2)}`);
+            problemData = testcasesResponse.data;
+            console.log(`problemData = ${JSON.stringify(problemData, null, 2)}`)
+            
         // ------------------------------------------------------
         // Step 2: Download testcases via HTTP (public MinIO)
         // ------------------------------------------------------
@@ -517,9 +526,10 @@ app.post('/submit', async (req, res) => {
 
         try {
             const testcasesResponse = await axios.get(testcasesLink);
-            console.log(`testcasesResponse = ${testcasesResponse}`);
+            console.log(`testcasesResponse = ${JSON.stringify(testcasesResponse, null, 2)}`);
             problemData = testcasesResponse.data;
-            console.log(`problemData = ${problemData}`)
+            console.log(`problemData = ${JSON.stringify(problemData, null, 2)}`)
+            
         } catch (err) {
             console.error('Failed to fetch testcases:', err);
             return res.status(500).json({ error: 'Failed to load test cases.' });

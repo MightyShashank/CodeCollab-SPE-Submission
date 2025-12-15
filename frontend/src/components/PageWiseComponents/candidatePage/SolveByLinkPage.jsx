@@ -6,7 +6,7 @@ import { parsedProblemState } from '@/recoil/atoms/problemAtoms';
 import ProblemDisplay from '@/utils/ProblemDisplay';
 
 // The base URL of your deployed API
-const API_URL = 'https://mostly-postfemoral-xenia.ngrok-free.dev';
+const API_URL = ' http://localhost:8085';
 
 export default function SolveByLinkPage() {
   const [url, setUrl] = useState('');
@@ -30,11 +30,13 @@ export default function SolveByLinkPage() {
             'Content-Type': 'application/json',
             // The browser will automatically send the httpOnly cookie with the JWT,
             // which the API Gateway will use for verification.
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
             body: JSON.stringify({ url }),
             // --- FIXED: This is crucial for sending the auth cookie ---
             credentials: 'include',
         });
+
 
         const data = await response.json();
 

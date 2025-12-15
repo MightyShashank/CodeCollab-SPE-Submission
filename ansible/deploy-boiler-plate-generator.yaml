@@ -1,0 +1,7 @@
+- hosts: local
+  gather_facts: false
+  vars:
+    service_path: backend/services/boiler-plate-generator
+    deploy_script: deploy-boiler-plate-generator.sh
+  roles:
+    - run-deploy-script

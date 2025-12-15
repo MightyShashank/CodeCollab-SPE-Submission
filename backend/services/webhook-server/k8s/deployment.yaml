@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: webhook-server
-        image: mightyshashank/codecollab:web-hook-server-image-v73
+        image: mightyshashank/codecollab:web-hook-server-image-v78
         ports:
         - containerPort: 3000
         

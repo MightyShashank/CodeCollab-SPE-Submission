@@ -29,11 +29,13 @@ export const generateTokenAndSetCookie = (res, userId) => {
     res.cookie("token", token, {
         httpOnly: true,
         // 'none' is required to allow the cookie to be sent from your frontend to your backend domain.
-        secure: true, // secure is true only when we are in production
-        sameSite: "none", // this prevents CSRF attacks, if "strict" that prevents CSRF attacks
+        secure: false, // secure is true only when we are in production
+        sameSite: "lax", // this prevents CSRF attacks, if "strict" that prevents CSRF attacks
         maxAge: 7 * 24 * 60 * 60 * 100, // milliSeconds 7 days
         path: "/", // cookie will be sent for all routes, see to remove if req
     });
+
+    
 
     return token;
 }

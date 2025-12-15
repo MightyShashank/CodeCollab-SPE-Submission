@@ -11,8 +11,6 @@ nodes:
         hostPort: 443
   - role: worker
   - role: worker
-  - role: worker
-  - role: worker
 networking:
   disableDefaultCNI: false
 

@@ -1,0 +1,7 @@
+- hosts: local
+  gather_facts: false
+  vars:
+    service_path: backend/services/url-parser
+    deploy_script: deploy-url-parser.sh
+  roles:
+    - run-deploy-script

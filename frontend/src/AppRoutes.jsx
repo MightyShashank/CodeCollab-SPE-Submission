@@ -24,12 +24,21 @@ export default function AppRoutes() {
   useEffect(() => {
     const checkUserAuth = async () => {
       try {
-        // include credentials so cookies get sent
+        const token = localStorage.getItem('token');
+
+        // If no token, user is not authenticated
+        if (!token) {
+          setUser(null);
+          return;
+        }
+
         const res = await fetch(
-          '/api/auth/check-auth',
+          'http://localhost:8085/api/auth/check-auth',
           {
             method: 'GET',
-            credentials: 'include',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -37,21 +46,15 @@ export default function AppRoutes() {
           const data = await res.json();
           setUser(data.user);
 
-          // --- THIS WAS THE PROBLEM ---
-          // The line below was removed because it forcefully navigated the user
-          // to '/home' every time the component mounted and the user was authenticated.
-          // This caused the URL to "snap back" to '/home' even if you were on a
-          // different nested route like '/home/groups'.
-          // 
-          // REMOVED: navigate('/home', { replace: true });
-          //
-          // With this line gone, the <Routes> component below is now fully in control
-          // of rendering the correct page based on the current URL, which is the correct behavior.
-
+          // Navigation logic intentionally left untouched
+          // (as per your original comments)
+        } else {
+          // Token exists but is invalid / expired
+          localStorage.removeItem('token');
+          setUser(null);
         }
       } catch (error) {
         console.error("Auth check failed:", error);
-        // If the auth check fails, it's good practice to ensure the user state is null
         setUser(null);
       } finally {
         setLoading(false);
@@ -59,7 +62,6 @@ export default function AppRoutes() {
     };
 
     checkUserAuth();
-  // The dependency array is updated. `Maps` is no longer used inside this effect.
   }, [setUser]);
 
   if (loading) {

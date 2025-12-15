@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: problem-ai-service
-        image: mightyshashank/codecollab:problem-ai-service-image-v5 # <-- IMPORTANT: Change this
+        image: mightyshashank/codecollab:problem-ai-service-image-v9 # <-- IMPORTANT: Change this
         ports:
         - containerPort: 6000
         envFrom:

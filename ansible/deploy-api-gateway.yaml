@@ -1,0 +1,7 @@
+- hosts: local
+  gather_facts: false
+  vars:
+    service_path: backend/services/api-gateway
+    deploy_script: deploy-api-gateway.sh
+  roles:
+    - run-deploy-script

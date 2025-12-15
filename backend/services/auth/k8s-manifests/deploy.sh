@@ -6,8 +6,9 @@ kubectl apply -f auth-hpa.yaml
 # kubectl apply -f auth-cronjob-cleanup.yaml
 
 # build img and push to docker hub
-# docker build -t mightyshashank/codecollab:auth-server-image-v23 .
-# docker push mightyshashank/codecollab:auth-server-image-v23
+# docker build -t mightyshashank/codecollab:auth-server-image-v28 .
+# docker push mightyshashank/codecollab:auth-server-image-v28
+# DOCKER_BUILDKIT=0 docker build -t mightyshashank/codecollab:auth-server-image-v28 .
 
 # kubectl delete -f auth-secret.yaml
 # kubectl delete -f auth-configmap.yaml

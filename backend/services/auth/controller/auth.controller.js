@@ -122,13 +122,18 @@ export const login = async (req, res) => {
             return res.status(400).json({ success: false, message: "Incorrect password. Please try again." }); // always return a response its imp to use return else sometimes you may get errors
         }
 
-        generateTokenAndSetCookie(res, user.user_id); // generates the jwt token and sets the cookie
+        console.log(`Login successful for user_id: ${user.user_id}`);
+
+        const token = generateTokenAndSetCookie(res, user.user_id); // generates the jwt token and sets the cookie
+
+        console.log(`Set cookie for user_id: ${user.user_id}`);
 
         await pool.query('UPDATE users SET last_login = NOW() WHERE user_id = $1', [user.user_id]);
 
         delete user.password_hash; // Remove password before sending back
 
         return res.status(200).json({
+            token: token,
             success: true,
             message: "Logged in successfully",
             user,
@@ -226,7 +231,12 @@ export const checkAuth = async (req, res) => {
         if (userResult.rows.length === 0) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
+
+        console.log(`checkAuth successful for user_id: ${req.userId}`);
+
         const user = userResult.rows[0];
+
+        console.log(`checkAuth returning user data for user_id: ${user.user_id}`);
 
         return res.status(200).json({ success: true, user });
 
